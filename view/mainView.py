@@ -1,4 +1,5 @@
 import sys
+import pickle
 
 from PyQt5 import Qt
 from PyQt5.QtWidgets import *
@@ -16,7 +17,6 @@ class MainWidget(QWidget):
         self.tamagodat = []
         self.savefilename = 'Tamago.dat'
         self.readTamago()
-
 
     def init_ui(self):
         self.resize(550, 650)
@@ -148,6 +148,12 @@ class MainWidget(QWidget):
 
         self.setLayout(vbox)
 
+
+
+    def game_clicked(self):
+        self.thisWindow = GameView.GameWidget()
+        self.thisWindow.show()
+
     def closeEvent(self, event):
         self.writeSaveFile()
 
@@ -158,13 +164,6 @@ class MainWidget(QWidget):
             self.tamagodat = []
             return
 
-    def game_clicked(self):
-        self.thisWindow = GameView.GameWidget()
-        self.thisWindow.show()
-
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Escape:
-            self.close()
         try:
             self.tamagodat = pickle.load(fH)
         except:
