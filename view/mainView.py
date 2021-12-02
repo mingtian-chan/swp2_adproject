@@ -4,6 +4,7 @@ from PyQt5 import Qt
 from PyQt5.QtWidgets import *
 from qtpy import QtGui, QtCore
 from PyQt5.QtCore import *
+import GameView
 
 
 class MainWidget(QWidget):
@@ -20,7 +21,6 @@ class MainWidget(QWidget):
         self.setStyleSheet("background-color: rgb(253, 255,188);")
         self.show()
 
-        icon_size = QSize(200, 200)
         BTN_STYLE_SHEET = "background-color: rgb(255, 220, 184)"
 
         level_label = QLabel('Level: ?')
@@ -146,10 +146,14 @@ class MainWidget(QWidget):
 
 
 
+    def game_clicked(self):
+        self.thisWindow = GameView.GameWidget()
+        self.thisWindow.show()
+
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
-            self.dbmanager.save()
             self.close()
+
 
 
 if __name__ == "__main__":
