@@ -3,9 +3,9 @@ import pickle
 
 from PyQt5 import Qt
 from PyQt5.QtWidgets import *
-from qtpy import QtGui, QtCore
+import PyQt5.QtGui as QtGui
 from PyQt5.QtCore import *
-# import GameView
+import view.GameView as GameView
 
 
 class MainWidget(QWidget):
@@ -58,6 +58,7 @@ class MainWidget(QWidget):
         game_btn.setStyleSheet(BTN_STYLE_SHEET)
         game_btn.setIconSize(QSize(65, 65))
         game_btn.setIcon(game_icon)
+        game_btn.clicked.connect(self.game_clicked)
 
 
         food_icon = QtGui.QIcon('../resource/icon/food.png')
@@ -151,6 +152,7 @@ class MainWidget(QWidget):
 
 
     def game_clicked(self):
+        print("clciekd")
         self.thisWindow = GameView.GameWidget()
         self.thisWindow.show()
 
