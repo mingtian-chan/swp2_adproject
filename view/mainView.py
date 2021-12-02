@@ -1,3 +1,4 @@
+import pickle
 import sys
 
 from PyQt5 import Qt
@@ -12,6 +13,10 @@ class MainWidget(QWidget):
         super(MainWidget, self).__init__(parent)
         self.thisWindow = self
         self.init_ui()
+        self.tamagodat = []
+        self.savefilename = 'Tamago.dat'
+        self.readTamago()
+
 
     def init_ui(self):
         self.resize(550, 650)
@@ -144,12 +149,33 @@ class MainWidget(QWidget):
 
         self.setLayout(vbox)
 
+    def closeEvent(self, event):
+        self.writeSaveFile()
 
+    def readTamago(self):
+        try:
+            fH = open(self.savefilename, 'rb')
+        except FileNotFoundError as e:
+            self.tamagodat = []
+            return
 
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Escape:
-            self.dbmanager.save()
-            self.close()
+        try:
+            self.tamagodat = pickle.load(fH)
+        except:
+            pass
+        else:
+            pass
+        fH.close()
+
+    def writeSaveFile(self):
+        fH = open(self.savefilename, 'wb')
+        pickle.dump(self.tamagodat, fH)
+        fH.close()
+    #
+    # def keyPressEvent(self, event):  # 나가는 이벤트 중복임 하나로 뭉치자.
+    #     if event.key() == Qt.Key_Escape:
+    #         self.dbmanager.save()
+    #         self.close()
 
 
 if __name__ == "__main__":
