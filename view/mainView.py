@@ -5,7 +5,7 @@ from PyQt5 import Qt
 from PyQt5.QtWidgets import *
 from qtpy import QtGui, QtCore
 from PyQt5.QtCore import *
-import GameView
+# import GameView
 
 
 class MainWidget(QWidget):
@@ -154,6 +154,10 @@ class MainWidget(QWidget):
         self.thisWindow = GameView.GameWidget()
         self.thisWindow.show()
 
+    def keyPressEvent(self, event):  # 나가는 이벤트 중복임 하나로 뭉치자.
+        if event.key() == Qt.Key_Escape:
+            self.close()
+
     def closeEvent(self, event):
         self.writeSaveFile()
 
@@ -176,11 +180,7 @@ class MainWidget(QWidget):
         fH = open(self.savefilename, 'wb')
         pickle.dump(self.tamagodat, fH)
         fH.close()
-    #
-    # def keyPressEvent(self, event):  # 나가는 이벤트 중복임 하나로 뭉치자.
-    #     if event.key() == Qt.Key_Escape:
-    #         self.dbmanager.save()
-    #         self.close()
+
 
 
 
