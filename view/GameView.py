@@ -2,9 +2,8 @@ import sys
 
 from PyQt5 import Qt
 from PyQt5.QtWidgets import *
-from qtpy import QtGui, QtCore
+import PyQt5.QtGui as QtGui
 from PyQt5.QtCore import *
-import MainView
 
 
 class GameWidget(QWidget):
@@ -158,8 +157,7 @@ class GameWidget(QWidget):
         exit_btn.clicked.connect(self.exit_clicked)
 
     def exit_clicked(self):
-        self.thisWindow = MainView.MainWidget()
-        self.thisWindow.show()
+        self.destroy()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:

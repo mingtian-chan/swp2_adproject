@@ -1,10 +1,11 @@
 import sys
+import pickle
 
 from PyQt5 import Qt
 from PyQt5.QtWidgets import *
-from qtpy import QtGui, QtCore
+import PyQt5.QtGui as QtGui
 from PyQt5.QtCore import *
-import GameView
+import view.GameView as GameView
 
 
 class MainWidget(QWidget):
@@ -13,6 +14,9 @@ class MainWidget(QWidget):
         super(MainWidget, self).__init__(parent)
         self.thisWindow = self
         self.init_ui()
+        self.tamagodat = []
+        self.savefilename = 'Tamago.dat'
+        self.readTamago()
 
     def init_ui(self):
         self.resize(550, 650)
@@ -54,6 +58,7 @@ class MainWidget(QWidget):
         game_btn.setStyleSheet(BTN_STYLE_SHEET)
         game_btn.setIconSize(QSize(65, 65))
         game_btn.setIcon(game_icon)
+        game_btn.clicked.connect(self.game_clicked)
 
 
         food_icon = QtGui.QIcon('../resource/icon/food.png')
@@ -147,12 +152,37 @@ class MainWidget(QWidget):
 
 
     def game_clicked(self):
+        print("clciekd")
         self.thisWindow = GameView.GameWidget()
         self.thisWindow.show()
 
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, event):  # 나가는 이벤트 중복임 하나로 뭉치자.
         if event.key() == Qt.Key_Escape:
             self.close()
+
+    def closeEvent(self, event):
+        self.writeSaveFile()
+
+    def readTamago(self):
+        try:
+            fH = open(self.savefilename, 'rb')
+        except FileNotFoundError as e:
+            self.tamagodat = []
+            return
+
+        try:
+            self.tamagodat = pickle.load(fH)
+        except:
+            pass
+        else:
+            pass
+        fH.close()
+
+    def writeSaveFile(self):
+        fH = open(self.savefilename, 'wb')
+        pickle.dump(self.tamagodat, fH)
+        fH.close()
+
 
 
 
