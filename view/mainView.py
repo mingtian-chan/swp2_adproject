@@ -58,7 +58,6 @@ class MainWidget(QWidget):
         game_btn.setStyleSheet(BTN_STYLE_SHEET)
         game_btn.setIconSize(QSize(70,70))
         game_btn.setIcon(game_icon)
-        game_btn.clicked.connect(self.game_clicked)
 
 
         food_icon = QtGui.QIcon('../resource/icon/food.png')
