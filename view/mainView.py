@@ -122,8 +122,8 @@ class MainWidget(QWidget):
 
         mainLayout.addLayout(statusLayout, 0, 0, 1, 2)
         mainLayout.addLayout(displayLayout, 1, 0, 2, 2)
-        mainLayout.addLayout(barLayout, 2, 0, 2, 1)
-        mainLayout.addLayout(buttonLayout, 2, 1, 2, 2)
+        mainLayout.addLayout(barLayout, 3, 0, 3, 1)
+        mainLayout.addLayout(buttonLayout, 3, 1, 3, 2)
 
         statusLayout.addWidget(level_label,0, 0)
         statusLayout.addWidget(exp_label, 0, 1)
@@ -138,15 +138,6 @@ class MainWidget(QWidget):
         buttonLayout.addWidget(wash_label,3, 0)
         buttonLayout.addWidget(sleep_btn, 2, 1)
         buttonLayout.addWidget(sleep_label, 3, 1)
-        hbox3 = QHBoxLayout()
-        hbox3.addStretch(1)
-        hbox3.addWidget(food_label)
-        hbox3.addStretch(1)
-        hbox3.addWidget(wash_label)
-        hbox3.addStretch(1)
-        hbox3.addWidget(sleep_label)
-        hbox3.addStretch(1)
-
 
         game_btn.clicked.connect(self.game_clicked)
 
