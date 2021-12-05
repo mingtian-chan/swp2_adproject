@@ -15,7 +15,7 @@ class MainWidget(QWidget):
         self.init_ui()
 
     def init_ui(self):
-        self.resize(550, 650)
+        self.resize(600, 720)
         self.setWindowTitle("다마고치")
 
         self.setStyleSheet("background-color: rgb(253, 255,188);")
@@ -38,9 +38,9 @@ class MainWidget(QWidget):
         character_icon = QtGui.QIcon('../resource/icon/character.png')
         character_btn = QPushButton()
         character_btn.setStyleSheet("background-color: rgb(255, 255,255);")
-        character_btn.setMaximumWidth(400)
-        character_btn.setMaximumHeight(280)
-        character_btn.setIconSize(QSize(270, 270))
+        character_btn.setMaximumWidth(500)
+        character_btn.setMaximumHeight(350)
+        character_btn.setIconSize(QSize(500, 350))
         character_btn.setIcon(character_icon)
 
         speak_label = QLabel('배고파요 ㅠㅠ')
@@ -49,10 +49,10 @@ class MainWidget(QWidget):
 
         game_icon = QtGui.QIcon('../resource/icon/game.png')
         game_btn = QPushButton()
-        game_btn.setMaximumWidth(100)
-        game_btn.setMaximumHeight(70)
+        game_btn.setMaximumWidth(90)
+        game_btn.setMaximumHeight(80)
         game_btn.setStyleSheet(BTN_STYLE_SHEET)
-        game_btn.setIconSize(QSize(65, 65))
+        game_btn.setIconSize(QSize(70,70))
         game_btn.setIcon(game_icon)
 
 
@@ -110,28 +110,26 @@ class MainWidget(QWidget):
 
         hbox1_2 = QHBoxLayout()
         hbox1_2.addStretch(1)
-        hbox1_2.addWidget(speak_label)
+        hbox1_2.addWidget(food_btn)
         hbox1_2.addStretch(1)
         hbox1_2.addWidget(game_btn)
         hbox1_2.addStretch(1)
 
         hbox2 = QHBoxLayout()
         hbox2.addStretch(1)
-        hbox2.addWidget(food_btn)
-        hbox2.addStretch(1)
         hbox2.addWidget(wash_btn)
         hbox2.addStretch(1)
         hbox2.addWidget(sleep_btn)
         hbox2.addStretch(1)
 
-        hbox3 = QHBoxLayout()
-        hbox3.addStretch(1)
-        hbox3.addWidget(food_label)
-        hbox3.addStretch(1)
-        hbox3.addWidget(wash_label)
-        hbox3.addStretch(1)
-        hbox3.addWidget(sleep_label)
-        hbox3.addStretch(1)
+        # hbox3 = QHBoxLayout()
+        # hbox3.addStretch(1)
+        # hbox3.addWidget(food_label)
+        # hbox3.addStretch(1)
+        # hbox3.addWidget(wash_label)
+        # hbox3.addStretch(1)
+        # hbox3.addWidget(sleep_label)
+        # hbox3.addStretch(1)
 
         vbox = QVBoxLayout()
         vbox.addSpacing(2)
@@ -139,12 +137,11 @@ class MainWidget(QWidget):
         vbox.addLayout(hbox1)
         vbox.addLayout(hbox1_2)
         vbox.addLayout(hbox2)
-        vbox.addLayout(hbox3)
+        # vbox.addLayout(hbox3)
 
+        game_btn.clicked.connect(self.game_clicked)
 
         self.setLayout(vbox)
-
-
 
     def game_clicked(self):
         self.thisWindow = GameView.GameWidget()
@@ -153,7 +150,6 @@ class MainWidget(QWidget):
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             self.close()
-
 
 
 if __name__ == "__main__":
