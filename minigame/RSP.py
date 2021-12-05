@@ -31,6 +31,3 @@ def RSP():
             break
         else:
             print('가위바위보를 내세요')
-
-
-
