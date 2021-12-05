@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import *
 import PyQt5.QtGui as QtGui
 from PyQt5.QtCore import *
 import view.GameView as GameView
-
+from game_manager import GameState
 
 class MainWidget(QWidget):
     def __init__(self, parent=None):
@@ -14,8 +14,8 @@ class MainWidget(QWidget):
         super(MainWidget, self).__init__(parent)
         self.thisWindow = self
         self.init_ui()
-        self.tamagodat = []
         self.savefilename = 'Tamago.dat'
+        self.gamestate = None
         self.readTamago()
 
     def init_ui(self):
@@ -159,20 +159,20 @@ class MainWidget(QWidget):
         try:
             fH = open(self.savefilename, 'rb')
         except FileNotFoundError as e:
-            self.tamagodat = []
+            self.gamestate = GameState()
             return
 
         try:
-            self.tamagodat = pickle.load(fH)
+            tamagodat = pickle.load(fH)
         except:
-            pass
+            self.gamestate = GameState()
         else:
-            pass
+            self.gamestate = GameState(tamagodat["experience"], tamagodat["satiety"], tamagodat["hygiene"], tamagodat["drowsiness"], tamagodat["hp"])
         fH.close()
 
     def writeSaveFile(self):
         fH = open(self.savefilename, 'wb')
-        pickle.dump(self.tamagodat, fH)
+        pickle.dump({"experience": self.gamestate.experience, "satiety": self.gamestate.satiety, "hygiene": self.gamestate.hygiene, "drowsiness": self.gamestate.drowsiness, "hp": self.gamestate.hp}, fH)
         fH.close()
 
 
