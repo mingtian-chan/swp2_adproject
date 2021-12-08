@@ -1,33 +1,38 @@
-from random import *
+import random
 
-def RSP():
-    difficulty = int(input('난이도를 입력하세요(0~60): '))
-    difficulty -= 30
-    defaultR = 30
-    defaultS = 30
-    defaultP = 30
-    print(difficulty)
 
-        # 가위 a 개 바위 b개 보 c개 로 설정 한 뒤, 리스트를 만들어서 처음 나오는 값을 cpu가 내는 값으로 하면 어떨까?
+class RSP:
+    def __init__(self,user):
+        self.userPick = user
+        self.sel = ['가위', '바위', '보']
 
-    while(True):
+        self.result = {0: '승리했습니다.', 1: '패배했습니다.', 2: '비겼습니다.'}
 
-        user = input('가위 바위 보: ')
+    def checkWin(user, com):
 
-        if user == '바위':
-            defaultR -= difficulty
-            defaultS += 2* difficulty
-            defaultP -= difficulty
-            break
-        elif user == '가위':
-            defaultR -= difficulty
-            defaultS += 2 * difficulty
-            defaultP -= difficulty
-            break
-        elif user == '보':
-            defaultR -= difficulty
-            defaultS += 2 * difficulty
-            defaultP -= difficulty
-            break
+        if not user in sel:
+           print('잘못입력하였습니다. 다시 입력하세요')
+           return False
+
+        print(f'사용자 ( {user} vs {com} ) 컴퓨터')
+        if user == com:
+            state = 2
+        elif user == '가위' and com == '바위':
+            state = 1
+        elif user == '바위' and com == '보':
+            state = 1
+        elif user == '보' and com == '가위':
+            state = 1
         else:
-            print('가위바위보를 내세요')
+            state = 0
+        print(result[state])
+        return True
+
+
+print('\n-------------------------------------------')
+while True:
+    user = input("가위, 바위, 보 : ")
+    com = sel[random.randint(0, 2)]
+    if checkWin(user, com):
+        break
+print('-------------------------------------------\n')
