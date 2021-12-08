@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import *
 import PyQt5.QtGui as QtGui
 from PyQt5.QtCore import *
 import view.GameView as GameView
-from game_manager import GameState
+
 
 class MainWidget(QWidget):
     def __init__(self, parent=None):
@@ -14,8 +14,8 @@ class MainWidget(QWidget):
         super(MainWidget, self).__init__(parent)
         self.thisWindow = self
         self.init_ui()
+        self.tamagodat = []
         self.savefilename = 'Tamago.dat'
-        self.gamestate = None
         self.readTamago()
 
     def init_ui(self):
@@ -58,6 +58,7 @@ class MainWidget(QWidget):
         game_btn.setStyleSheet(BTN_STYLE_SHEET)
         game_btn.setIconSize(QSize(70,70))
         game_btn.setIcon(game_icon)
+
 
 
         food_icon = QtGui.QIcon('../resource/icon/food.png')
@@ -111,6 +112,58 @@ class MainWidget(QWidget):
         game_label.setAlignment(Qt.AlignCenter)
         game_label.setFont(QtGui.QFont("HY엽서M", 15))
 
+        hp_label = QLabel('체력')
+        hp_label.setMaximumWidth(40)
+        hp_label.setStyleSheet("color:rgb(67, 67, 67);")
+        hp_label.setAlignment(Qt.AlignCenter)
+        hp_label.setFont(QtGui.QFont("HY엽서M", 10))
+
+        experience_label = QLabel('경험치')
+        experience_label.setMaximumWidth(40)
+        experience_label.setStyleSheet("color:rgb(67, 67, 67);")
+        experience_label.setAlignment(Qt.AlignCenter)
+        experience_label.setFont(QtGui.QFont("HY엽서M", 10))
+
+        satiety_label = QLabel('포만감')
+        satiety_label.setMaximumWidth(40)
+        satiety_label.setStyleSheet("color:rgb(67, 67, 67);")
+        satiety_label.setAlignment(Qt.AlignCenter)
+        satiety_label.setFont(QtGui.QFont("HY엽서M", 10))
+
+        hygiene_label = QLabel('청결')
+        hygiene_label.setMaximumWidth(40)
+        hygiene_label.setStyleSheet("color:rgb(67, 67, 67);")
+        hygiene_label.setAlignment(Qt.AlignCenter)
+        hygiene_label.setFont(QtGui.QFont("HY엽서M", 10))
+
+        drowsiness_label = QLabel('졸림')
+        drowsiness_label.setMaximumWidth(40)
+        drowsiness_label.setStyleSheet("color:rgb(67, 67, 67);")
+        drowsiness_label.setAlignment(Qt.AlignCenter)
+        drowsiness_label.setFont(QtGui.QFont("HY엽서M", 10))
+
+        hp_bar = QLineEdit()
+        hp_bar.setReadOnly(True)
+        hp_bar.setText("lllllllllllllllllllllllllllllllllllllllllllllll")
+        hp_bar.setFixedWidth(150)
+        experience_bar = QLineEdit()
+        experience_bar.setReadOnly(True)
+        experience_bar.setText("lllllllllllllllllllllllllllllllllllllllllllllll")
+        experience_bar.setFixedWidth(150)
+        satiety_bar = QLineEdit()
+        satiety_bar.setReadOnly(True)
+        satiety_bar.setText("lllllllllllllllllllllllllllllllllllllllllllllll")
+        satiety_bar.setFixedWidth(150)
+        hygiene_bar = QLineEdit()
+        hygiene_bar.setReadOnly(True)
+        hygiene_bar.setText("lllllllllllllllllllllllllllllllllllllllllllllll")
+        hygiene_bar.setFixedWidth(150)
+        drowsiness_bar = QLineEdit()
+        drowsiness_bar.setReadOnly(True)
+        drowsiness_bar.setText("lllllllllllllllllllllllllllllllllllllllllllllll")
+        drowsiness_bar.setFixedWidth(150)
+
+
         statusLayout = QGridLayout()
         displayLayout = QGridLayout()
         barLayout = QGridLayout()
@@ -128,6 +181,18 @@ class MainWidget(QWidget):
         statusLayout.addWidget(exp_label, 0, 1)
 
         displayLayout.addWidget(character_btn)
+
+        barLayout.addWidget(hp_label, 1, 0)
+        barLayout.addWidget(hp_bar, 1, 1)
+        barLayout.addWidget(experience_label, 2, 0)
+        barLayout.addWidget(experience_bar, 2, 1)
+        barLayout.addWidget(satiety_label, 3, 0)
+        barLayout.addWidget(satiety_bar, 3, 1)
+        barLayout.addWidget(hygiene_label, 4, 0)
+        barLayout.addWidget(hygiene_bar, 4, 1)
+        barLayout.addWidget(drowsiness_label, 5, 0)
+        barLayout.addWidget(drowsiness_bar, 5, 1)
+
 
         buttonLayout.addWidget(food_btn, 0, 0)
         buttonLayout.addWidget(food_label, 1, 0)
@@ -158,20 +223,20 @@ class MainWidget(QWidget):
         try:
             fH = open(self.savefilename, 'rb')
         except FileNotFoundError as e:
-            self.gamestate = GameState()
+            self.tamagodat = []
             return
 
         try:
-            tamagodat = pickle.load(fH)
+            self.tamagodat = pickle.load(fH)
         except:
-            self.gamestate = GameState()
+            pass
         else:
-            self.gamestate = GameState(tamagodat["experience"], tamagodat["satiety"], tamagodat["hygiene"], tamagodat["drowsiness"], tamagodat["hp"])
+            pass
         fH.close()
 
     def writeSaveFile(self):
         fH = open(self.savefilename, 'wb')
-        pickle.dump({"experience": self.gamestate.experience, "satiety": self.gamestate.satiety, "hygiene": self.gamestate.hygiene, "drowsiness": self.gamestate.drowsiness, "hp": self.gamestate.hp}, fH)
+        pickle.dump(self.tamagodat, fH)
         fH.close()
 
 
