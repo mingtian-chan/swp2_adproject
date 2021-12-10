@@ -1,6 +1,7 @@
 import random
 import math
 
+import numpy
 import numpy as np
 
 
@@ -34,18 +35,25 @@ class GameState:
         if len(self.eat_integral) == 0:
             return
         satiety_vals = np.array(self.eat_integral)
-        res = np.sum((self.difficulty_factor * (satiety_vals - 100)) ** 2)
-        self.satiety += np.sum((self.difficulty_factor * (satiety_vals - 100)) ** 2)
+        self.satiety += np.sum(self.eat_gain_func(satiety_vals, self.difficulty_factor))
         self.satiety = min(100, max(0, self.satiety))
         self.experience += self.base_eat_xp + random.randrange(-self.base_eat_xp, self.base_eat_xp) + len(self.eat_integral)
         self.eat_integral = []
 
+    def satiety_loss_func(self, x):
+        return 24 - 12 * np.log10(x) + 0.1
+
+    def drowsiness_loss_func(self, x):
+        return 30 - 15 * np.log10(x) + 0.1
+
+    def eat_gain_func(self, x, difficulty):
+        return (difficulty * (x - 100)) ** 2
 
     def satiety_loss(self):
         if self.satiety <= 0:
             self.satiety = 0
             return
-        self.satiety -= 24 - 12 * math.log10(self.satiety) + 0.1
+        self.satiety -= self.satiety_loss_func(self.satiety)
         self.satiety = min(100, max(0, self.satiety))
 
     def sleep(self):
@@ -55,15 +63,22 @@ class GameState:
         if self.drowsiness <= 0:
             self.drowsiness = 0
             return
-        self.drowsiness -= 30 - 15 * math.log10(self.drowsiness) + 0.1
+        self.drowsiness -= self.drowsiness_loss_func(self.drowsiness)
         self.drowsiness = min(100, max(0, self.drowsiness))
 
-    def calculate_hp_loss(self, x):
-        if x <= self.start_hp_loss:
-            self.current_hp_loss = (self.max_hp_loss_pertick - 0.5) / self.expected_levels * int(self.expected_levels / 100)
-            return (0.5 - self.current_hp_loss)/30 * x + self.max_hp_loss_pertick
+    def hp_loss_func(self, x):
+
+        def loss_func(_x):
+            if _x <= self.start_hp_loss:
+                self.current_hp_loss = (self.max_hp_loss_pertick - 0.5) / self.expected_levels * int(self.expected_levels / 100)
+                return (0.5 - self.current_hp_loss)/30 * _x + self.max_hp_loss_pertick
+            else:
+                return 0
+
+        if isinstance(x, np.ndarray):
+            return np.vectorize(loss_func)(x)
         else:
-            return 0
+            return loss_func(x)
 
     def tick(self):
         self.difficulty_factor = self.base_difficulty_factor + int(self.experience / self.xp_per_level) * (self.base_difficulty_factor - self.max_difficulty_factor) / -self.expected_levels
@@ -72,6 +87,6 @@ class GameState:
             self.eat_integral.append(self.satiety)
         self.drowsiness_loss()
         worst_metric = min(self.satiety, self.drowsiness)
-        self.hp -= self.calculate_hp_loss(worst_metric)
+        self.hp -= self.hp_loss_func(worst_metric)
         self.hp = max(0, self.hp)
 
