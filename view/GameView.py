@@ -1,16 +1,22 @@
+import random
 import sys
 
 from PyQt5 import Qt
 from PyQt5.QtWidgets import *
 import PyQt5.QtGui as QtGui
 from PyQt5.QtCore import *
+import pathlib
+from game_manager import GameState
+icon_basepath = pathlib.Path(__file__).parents[1].absolute()
+icon_basepath = icon_basepath.joinpath("resource/icon")
 
-
-class GameWidget(QWidget):
-    def __init__(self, parent=None):
+class RPSGameWidget(QWidget):
+    def __init__(self, parent=None, game_state=None):
         # super().__init__()
-        super(GameWidget, self).__init__(parent)
+        super(RPSGameWidget, self).__init__(parent)
+        self.game_state = game_state
         self.thisWindow = self
+        self.running = True
         self.init_ui()
 
     def init_ui(self):
@@ -22,17 +28,17 @@ class GameWidget(QWidget):
 
         BTN_STYLE_SHEET = "background-color: rgb(247, 218, 217)"
 
-        level_label = QLabel('Level: ?')
-        level_label.setMaximumHeight(50)
-        level_label.setStyleSheet("color:rgb(67, 67, 67);")
-        level_label.setAlignment(Qt.AlignCenter)
-        level_label.setFont(QtGui.QFont("HY엽서M", 20))
+        self.level_label = QLabel(f'Level: {int(self.game_state.experience / self.game_state.xp_per_level)}')
+        self.level_label.setMaximumHeight(50)
+        self.level_label.setStyleSheet("color:rgb(67, 67, 67);")
+        self.level_label.setAlignment(Qt.AlignCenter)
+        self.level_label.setFont(QtGui.QFont("HY엽서M", 20))
 
-        exp_label = QLabel('EXP : ???')
-        exp_label.setMaximumHeight(50)
-        exp_label.setStyleSheet("color:rgb(67, 67, 67);")
-        exp_label.setAlignment(Qt.AlignCenter)
-        exp_label.setFont(QtGui.QFont("HY엽서M", 20))
+        self.exp_label = QLabel(f'EXP : {self.game_state.experience % self.game_state.xp_per_level}')
+        self.exp_label.setMaximumHeight(50)
+        self.exp_label.setStyleSheet("color:rgb(67, 67, 67);")
+        self.exp_label.setAlignment(Qt.AlignCenter)
+        self.exp_label.setFont(QtGui.QFont("HY엽서M", 20))
 
         computer_label = QLabel('Computer')
         computer_label.setMaximumHeight(50)
@@ -40,19 +46,19 @@ class GameWidget(QWidget):
         computer_label.setAlignment(Qt.AlignCenter)
         computer_label.setFont(QtGui.QFont("HY엽서M", 20))
 
-        computer_icon = QtGui.QIcon('../resource/icon/rock.png')
-        computer_btn = QPushButton()
-        computer_btn.setStyleSheet("background-color: rgb(255, 245, 218);")
-        computer_btn.setMaximumWidth(320)
-        computer_btn.setMaximumHeight(320)
-        computer_btn.setIconSize(QSize(260, 260))
-        computer_btn.setIcon(computer_icon)
+        computer_icon = QtGui.QIcon(str(icon_basepath.joinpath('rock.png')))
+        self.computer_btn = QPushButton()
+        self.computer_btn.setStyleSheet("background-color: rgb(255, 245, 218);")
+        self.computer_btn.setMaximumWidth(320)
+        self.computer_btn.setMaximumHeight(320)
+        self.computer_btn.setIconSize(QSize(260, 260))
+        self.computer_btn.setIcon(computer_icon)
 
-        speak_label = QLabel('     이겼다 !!')
-        speak_label.setStyleSheet("color:rgb(67, 67, 67);")
-        speak_label.setFont(QtGui.QFont("HY엽서M", 20))
+        self.speak_label = QLabel('     이겼다 !!')
+        self.speak_label.setStyleSheet("color:rgb(67, 67, 67);")
+        self.speak_label.setFont(QtGui.QFont("HY엽서M", 20))
 
-        exit_icon = QtGui.QIcon('../resource/icon/exit.png')
+        exit_icon = QtGui.QIcon(str(icon_basepath.joinpath('exit.png')))
         exit_btn = QPushButton()
         exit_btn.setMaximumWidth(50)
         exit_btn.setMaximumHeight(50)
@@ -61,7 +67,7 @@ class GameWidget(QWidget):
         exit_btn.setIconSize(QSize(45, 45))
         exit_btn.setIcon(exit_icon)
 
-        rock_icon = QtGui.QIcon('../resource/icon/rock.png')
+        rock_icon = QtGui.QIcon(str(icon_basepath.joinpath('rock.png')))
         rock_btn = QPushButton()
         rock_btn.setMaximumWidth(90)
         rock_btn.setMaximumHeight(80)
@@ -69,8 +75,9 @@ class GameWidget(QWidget):
         rock_btn.setStyleSheet(BTN_STYLE_SHEET)
         rock_btn.setIconSize(QSize(70, 70))
         rock_btn.setIcon(rock_icon)
+        rock_btn.clicked.connect(lambda x: self.play_rps("rock"))
 
-        scissor_icon = QtGui.QIcon('../resource/icon/scissor.png')
+        scissor_icon = QtGui.QIcon(str(icon_basepath.joinpath('scissor.png')))
         scissor_btn = QPushButton()
         scissor_btn.setMaximumWidth(90)
         scissor_btn.setMaximumHeight(80)
@@ -78,8 +85,9 @@ class GameWidget(QWidget):
         scissor_btn.setStyleSheet(BTN_STYLE_SHEET)
         scissor_btn.setIconSize(QSize(70, 70))
         scissor_btn.setIcon(scissor_icon)
+        scissor_btn.clicked.connect(lambda x: self.play_rps("scissor"))
 
-        paper_icon = QtGui.QIcon('../resource/icon/hand.png')
+        paper_icon = QtGui.QIcon(str(icon_basepath.joinpath('hand.png')))
         paper_btn = QPushButton()
         paper_btn.setMaximumWidth(90)
         paper_btn.setMaximumHeight(80)
@@ -87,6 +95,7 @@ class GameWidget(QWidget):
         paper_btn.setStyleSheet(BTN_STYLE_SHEET)
         paper_btn.setIconSize(QSize(70, 70))
         paper_btn.setIcon(paper_icon)
+        paper_btn.clicked.connect(lambda event: self.play_rps("hand"))
 
         food_label = QLabel('가위')
         food_label.setMaximumHeight(20)
@@ -107,18 +116,18 @@ class GameWidget(QWidget):
         sleep_label.setFont(QtGui.QFont("HY엽서M", 15))
 
         hbox0 = QHBoxLayout()
-        hbox0.addWidget(level_label)
-        hbox0.addWidget(exp_label)
+        hbox0.addWidget(self.level_label)
+        hbox0.addWidget(self.exp_label)
 
         hbox0_5 = QHBoxLayout()
         hbox0_5.addWidget(computer_label)
 
         hbox1 = QHBoxLayout()
-        hbox1.addWidget(computer_btn)
+        hbox1.addWidget(self.computer_btn)
 
         hbox1_2 = QHBoxLayout()
         hbox1_2.addStretch(1)
-        hbox1_2.addWidget(speak_label)
+        hbox1_2.addWidget(self.speak_label)
         hbox1_2.addStretch(1)
         hbox1_2.addStretch(1)
         hbox1_2.addWidget(exit_btn)
@@ -156,16 +165,39 @@ class GameWidget(QWidget):
 
         exit_btn.clicked.connect(self.exit_clicked)
 
+    def closeEvent(self, a0: QtGui.QCloseEvent) -> None:
+        self.exit_clicked()
+
     def exit_clicked(self):
-        self.destroy()
+        self.running = False
+        self.close()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
             self.close()
 
+    def play_rps(self, player_choice):
+        choices = ["rock", "hand", "scissor"]
+        cpu = random.choice(choices)
+        computer_icon = QtGui.QIcon(str(icon_basepath.joinpath(f'{cpu}.png')))
+        self.computer_btn.setIcon(computer_icon)
+        print(player_choice, cpu)
+        if cpu == player_choice:
+            self.speak_label.setText("     비겼다!!")
+        elif (cpu == "hand" and player_choice == "scissor") or (cpu == "rock" and player_choice == "hand") or (cpu == "scissor" and player_choice == "rock"):
+            self.game_state.experience += 10
+            self.speak_label.setText("     이겼다!!")
+        elif (player_choice == "hand" and cpu == "scissor") or (player_choice == "rock" and cpu == "hand") or (player_choice == "scissor" and cpu == "rock"):
+            self.game_state.experience -= 10
+            self.game_state.experience = max(0, self.game_state.experience)
+            self.speak_label.setText("     졌다!!")
+
+        self.exp_label.setText(f'EXP : {self.game_state.experience % self.game_state.xp_per_level}')
+        self.level_label.setText(f'Level: {int(self.game_state.experience / self.game_state.xp_per_level)}')
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ex = GameWidget()
+    ex = RPSGameWidget(None, GameState())
     ex.show()
     sys.exit(app.exec_())
