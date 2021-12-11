@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
-from scipy
+#from scipy
 
 class DifficultyView(QWidget):
     def __init__(self, game_state):

@@ -1,3 +1,4 @@
+import random
 import sys
 import pickle
 
@@ -24,6 +25,11 @@ class MainWidget(QWidget):
         self.tick_timer.setInterval(1000)
         self.tick_timer.timeout.connect(self.ui_tick)
         self.tick_timer.start(100)
+
+        self.rotate_timer = QTimer(self)
+        self.rotate_timer.setInterval(750)
+        self.rotate_timer.timeout.connect(self.rotate_character)
+        self.rotate_timer.start(750)
         print("done")
 
 
@@ -51,12 +57,13 @@ class MainWidget(QWidget):
         self.exp_label = exp_label
 
         character_icon = QtGui.QIcon(str(icon_basepath.joinpath('character.png')))
-        character_btn = QPushButton()
-        character_btn.setStyleSheet("background-color: rgb(255, 255,255);")
-        character_btn.setMaximumWidth(500)
-        character_btn.setMaximumHeight(350)
-        character_btn.setIconSize(QSize(500, 350))
-        character_btn.setIcon(character_icon)
+
+        self.character_btn = QPushButton()
+        self.character_btn.setStyleSheet("background-color: rgb(255, 255,255);")
+        self.character_btn.setMaximumWidth(500)
+        self.character_btn.setMaximumHeight(350)
+        self.character_btn.setIcon(character_icon)
+        self.character_btn.setIconSize(1.3 * QSize(self.character_btn.width(), self.character_btn.height()))
 
         speak_label = QLabel('배고파요 ㅠㅠ')
         speak_label.setStyleSheet("color:rgb(67, 67, 67);")
@@ -204,7 +211,7 @@ class MainWidget(QWidget):
         statusLayout.addWidget(level_label,0, 0)
         statusLayout.addWidget(exp_label, 0, 1)
 
-        displayLayout.addWidget(character_btn)
+        displayLayout.addWidget(self.character_btn)
 
         barLayout.addWidget(hp_label, 1, 0)
         barLayout.addWidget(hp_bar, 1, 1)
@@ -230,6 +237,11 @@ class MainWidget(QWidget):
         game_btn.clicked.connect(self.game_clicked)
 
         self.setLayout(mainLayout)
+
+    def rotate_character(self):
+        char_icons = ["character.png", "character_rot_negative.png", "character_rot_positive.png"]
+
+        self.character_btn.setIcon(QtGui.QIcon(str(icon_basepath.joinpath(random.choice(char_icons)))))
 
     def ui_tick(self):
         if self.active_window != self:
