@@ -9,6 +9,7 @@ from PyQt5.QtCore import *
 import view.GameView as GameView
 import view.DifficultyView as DifficultyView
 from game_manager import GameState
+
 import pathlib
 import math
 import time
@@ -80,8 +81,7 @@ class MainWidget(QWidget):
         game_btn.setStyleSheet(BTN_STYLE_SHEET)
         game_btn.setIconSize(QSize(70,70))
         game_btn.setIcon(game_icon)
-
-
+        self.game_btn = game_btn
 
         food_icon = QtGui.QIcon(str(icon_basepath.joinpath('food.png')))
         food_btn = QPushButton()
@@ -92,6 +92,7 @@ class MainWidget(QWidget):
         food_btn.setIconSize(QSize(70, 70))
         food_btn.setIcon(food_icon)
         food_btn.clicked.connect(self.game_state.eat)
+        self.food_btn = food_btn
 
         wash_icon = QtGui.QIcon(str(icon_basepath.joinpath('wash.png')))
         wash_btn = QPushButton()
@@ -101,6 +102,8 @@ class MainWidget(QWidget):
         wash_btn.setStyleSheet(BTN_STYLE_SHEET)
         wash_btn.setIconSize(QSize(70, 70))
         wash_btn.setIcon(wash_icon)
+        self.wash_btn = wash_btn
+
 
         sleep_icon = QtGui.QIcon(str(icon_basepath.joinpath('sleep.png').resolve()))
         sleep_btn = QPushButton()
@@ -111,6 +114,7 @@ class MainWidget(QWidget):
         sleep_btn.setIconSize(QSize(70, 70))
         sleep_btn.setIcon(sleep_icon)
         sleep_btn.clicked.connect(self.game_state.sleep)
+        self.sleep_btn = sleep_btn
 
         food_label = QLabel('밥 먹기')
         food_label.setMaximumHeight(20)
@@ -248,6 +252,13 @@ class MainWidget(QWidget):
 
         self.character_btn.setIcon(QtGui.QIcon(str(icon_basepath.joinpath(random.choice(char_icons)))))
 
+    def disable_button(self):  # 얘는 어디에 연결해야 될까요
+        self.food_btn.setDisabled(True)
+        self.sleep_btn.setDisabled(True)
+        self.wash_btn.setDisabled(True)
+        self.game_btn.setDisabled(True)
+
+
     def ui_tick(self):
         if time.time() * 1000 - self.last_tick_time < self.game_state.get_tick():
             return
@@ -268,7 +279,7 @@ class MainWidget(QWidget):
             dv = DifficultyView.DifficultyView(self.game_state)
             self.active_window = dv
             dv.show()
-
+            self.disable_button()
     def update_labels_and_bars(self):
         self.level_label.setText(f'Level: {math.floor(self.game_state.experience / self.game_state.xp_per_level)}')
         self.exp_label.setText(f'EXP : {self.game_state.experience % self.game_state.xp_per_level}')
@@ -294,7 +305,7 @@ class MainWidget(QWidget):
         try:
             with open(self.savefilename, "rb") as f:
                 tamagodat = pickle.load(f)
-                if tamagodat["hp"] <= 0:
+                if self.game_state.gameOver():
                     raise Exception
                 self.game_state = GameState(name=tamagodat["name"], experience=tamagodat["experience"], satiety=tamagodat["satiety"],
                                             hygiene=tamagodat["hygiene"], drowsiness=tamagodat["drowsiness"], hp=tamagodat["hp"])
@@ -304,6 +315,7 @@ class MainWidget(QWidget):
             if ok:
                 self.game_state = GameState(name=text)
             else:
+                print('cancel pressed')
                 self.close()
 
 
@@ -330,6 +342,8 @@ class MainWidget(QWidget):
 
         with open("scores.dat", "wb") as f:
             pickle.dump(tamagodat, f)
+
+
 
 
 

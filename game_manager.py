@@ -7,6 +7,8 @@ import numpy as np
 
 class GameState:
     def __init__(self, name=None, experience=0, satiety=100, hygiene=100, drowsiness=100, hp=100):
+
+        self.gameover = False
         self.experience = experience
         self.xp_per_level = 100
         self.satiety = satiety
@@ -35,6 +37,9 @@ class GameState:
 
         self.eat_integral = []
         self.current_tick = 0
+
+        self.gameOver()
+        print(self.gameover)
 
     def get_tick(self):
         level = math.floor(self.experience / self.xp_per_level)
@@ -126,4 +131,10 @@ class GameState:
         self.hp += (end_level - start_level) * 10
         self.hp = min(100, self.hp)
 
+    def gameOver(self):
+        if self.hp == 0:
+            self.gameover = True
+        else:
+            self.gameover = False
+        return self.gameover
 
