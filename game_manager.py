@@ -33,13 +33,24 @@ class GameState:
         self.eat_integral = []
         self.current_tick = 0
 
+    def increment_xp(self, amount):
+        start_level = math.floor(self.experience / self.xp_per_level)
+        self.experience += amount
+        self.experience = max(0, self.experience)
+        end_level = math.floor(self.experience / self.xp_per_level)
+        self.hp += (end_level - start_level) * 10
+        self.hp = min(100, self.hp)
+
     def eat(self):
         if len(self.eat_integral) == 0:
             return
         satiety_vals = np.array(self.eat_integral)
         self.satiety += np.sum(self.eat_gain_func(satiety_vals, self.difficulty_factor))
         self.satiety = min(100, max(0, self.satiety))
-        self.experience += self.base_eat_xp + random.randrange(-self.base_eat_xp, self.base_eat_xp) + len(self.eat_integral)
+        #self.experience += self.base_eat_xp + random.randrange(-self.base_eat_xp, self.base_eat_xp) + len(self.eat_integral)
+        experience_bonus = 0 if len(self.eat_integral) >= 10 else self.base_eat_xp + random.randrange(-self.base_eat_xp, self.base_eat_xp)
+        self.increment_xp(int(len(self.eat_integral)/3) + experience_bonus)
+
         self.eat_integral = []
 
     def satiety_loss_func(self, x):
@@ -59,7 +70,12 @@ class GameState:
         self.satiety = min(100, max(0, self.satiety))
 
     def sleep(self):
+        self.increment_xp(int((100 - self.drowsiness) / 4))
         self.drowsiness = 100
+
+    def wash(self):
+        self.increment_xp(int((100 - self.hygiene) / 4))
+        self.hygiene = 100
 
     def drowsiness_loss(self):
         if self.drowsiness <= 0:
@@ -67,6 +83,12 @@ class GameState:
             return
         self.drowsiness -= self.drowsiness_loss_func(self.drowsiness)
         self.drowsiness = min(100, max(0, self.drowsiness))
+
+    def hygiene_loss(self):
+        if self.hygiene <= 0:
+            self.hygiene = 0
+            return
+        self.hygiene -= 1
 
     def hp_loss_func(self, x):
 
@@ -83,12 +105,18 @@ class GameState:
             return loss_func(x)
 
     def tick(self):
+        start_level = math.floor(self.experience / self.xp_per_level)
         self.difficulty_factor = self.base_difficulty_factor + int(self.experience / self.xp_per_level) * (self.base_difficulty_factor - self.max_difficulty_factor) / -self.expected_levels
         self.satiety_loss()
+        self.hygiene_loss()
         if self.satiety > 0:
             self.eat_integral.append(self.satiety)
         self.drowsiness_loss()
         worst_metric = min(self.satiety, self.drowsiness)
         self.hp -= self.hp_loss_func(worst_metric)
         self.hp = max(0, self.hp)
+        end_level = math.floor(self.experience / self.xp_per_level)
+        self.hp += (end_level - start_level) * 10
+        self.hp = min(100, self.hp)
+
 

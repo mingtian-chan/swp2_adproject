@@ -120,6 +120,7 @@ class MainWidget(QWidget):
         wash_label.setStyleSheet("color:rgb(67, 67, 67);")
         wash_label.setAlignment(Qt.AlignCenter)
         wash_label.setFont(QtGui.QFont("HY엽서M", 15))
+        wash_btn.clicked.connect(self.game_state.wash)
 
         sleep_label = QLabel('자기')
         sleep_label.setMaximumHeight(20)
@@ -265,6 +266,7 @@ class MainWidget(QWidget):
     def update_labels_and_bars(self):
         self.level_label.setText(f'Level: {math.floor(self.game_state.experience / self.game_state.xp_per_level)}')
         self.exp_label.setText(f'EXP : {self.game_state.experience % self.game_state.xp_per_level}')
+        self.experience_bar.setText("|" * int(self.game_state.experience % self.game_state.xp_per_level / 4))
         self.hp_bar.setText("|" * int(self.game_state.hp / 4))
         self.satiety_bar.setText("|" * int(self.game_state.satiety / 4))
         self.hygiene_bar.setText("|" * int(self.game_state.hygiene / 4))
