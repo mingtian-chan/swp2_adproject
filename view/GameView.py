@@ -18,6 +18,7 @@ class RPSGameWidget(QWidget):
         self.thisWindow = self
         self.running = True
         self.init_ui()
+        self.disable_button()
 
     def init_ui(self):
         self.resize(550, 650)
@@ -53,6 +54,9 @@ class RPSGameWidget(QWidget):
         self.computer_btn.setMaximumHeight(320)
         self.computer_btn.setIconSize(QSize(260, 260))
         self.computer_btn.setIcon(computer_icon)
+        self.computer_btn.setDisabled(True)  # setDisabled(True)를 하니까 화면이 회색이 됨 - 버튼은 안 눌러지지만 회색됨
+
+
 
         self.speak_label = QLabel('     이겼다 !!')
         self.speak_label.setStyleSheet("color:rgb(67, 67, 67);")
@@ -76,6 +80,7 @@ class RPSGameWidget(QWidget):
         rock_btn.setIconSize(QSize(70, 70))
         rock_btn.setIcon(rock_icon)
         rock_btn.clicked.connect(lambda x: self.play_rps("rock"))
+        self.rock_btn = rock_btn
 
         scissor_icon = QtGui.QIcon(str(icon_basepath.joinpath('scissor.png')))
         scissor_btn = QPushButton()
@@ -86,6 +91,7 @@ class RPSGameWidget(QWidget):
         scissor_btn.setIconSize(QSize(70, 70))
         scissor_btn.setIcon(scissor_icon)
         scissor_btn.clicked.connect(lambda x: self.play_rps("scissor"))
+        self.scissor_btn = scissor_btn
 
         paper_icon = QtGui.QIcon(str(icon_basepath.joinpath('hand.png')))
         paper_btn = QPushButton()
@@ -96,24 +102,25 @@ class RPSGameWidget(QWidget):
         paper_btn.setIconSize(QSize(70, 70))
         paper_btn.setIcon(paper_icon)
         paper_btn.clicked.connect(lambda event: self.play_rps("hand"))
+        self.paper_btn = paper_btn
 
-        food_label = QLabel('가위')
-        food_label.setMaximumHeight(20)
-        food_label.setStyleSheet("color:rgb(67, 67, 67);")
-        food_label.setAlignment(Qt.AlignCenter)
-        food_label.setFont(QtGui.QFont("HY엽서M", 15))
+        scissor_label = QLabel('가위')
+        scissor_label.setMaximumHeight(20)
+        scissor_label.setStyleSheet("color:rgb(67, 67, 67);")
+        scissor_label.setAlignment(Qt.AlignCenter)
+        scissor_label.setFont(QtGui.QFont("HY엽서M", 15))
 
-        wash_label = QLabel('바위')
-        wash_label.setMaximumHeight(20)
-        wash_label.setStyleSheet("color:rgb(67, 67, 67);")
-        wash_label.setAlignment(Qt.AlignCenter)
-        wash_label.setFont(QtGui.QFont("HY엽서M", 15))
+        rock_label = QLabel('바위')
+        rock_label.setMaximumHeight(20)
+        rock_label.setStyleSheet("color:rgb(67, 67, 67);")
+        rock_label.setAlignment(Qt.AlignCenter)
+        rock_label.setFont(QtGui.QFont("HY엽서M", 15))
 
-        sleep_label = QLabel('보')
-        sleep_label.setMaximumHeight(20)
-        sleep_label.setStyleSheet("color:rgb(67, 67, 67);")
-        sleep_label.setAlignment(Qt.AlignCenter)
-        sleep_label.setFont(QtGui.QFont("HY엽서M", 15))
+        paper_label = QLabel('보')
+        paper_label.setMaximumHeight(20)
+        paper_label.setStyleSheet("color:rgb(67, 67, 67);")
+        paper_label.setAlignment(Qt.AlignCenter)
+        paper_label.setFont(QtGui.QFont("HY엽서M", 15))
 
         hbox0 = QHBoxLayout()
         hbox0.addWidget(self.level_label)
@@ -145,11 +152,11 @@ class RPSGameWidget(QWidget):
 
         hbox3 = QHBoxLayout()
         hbox3.addStretch(1)
-        hbox3.addWidget(food_label)
+        hbox3.addWidget(scissor_label)
         hbox3.addStretch(1)
-        hbox3.addWidget(wash_label)
+        hbox3.addWidget(rock_label)
         hbox3.addStretch(1)
-        hbox3.addWidget(sleep_label)
+        hbox3.addWidget(paper_label)
         hbox3.addStretch(1)
 
         vbox = QVBoxLayout()
@@ -194,6 +201,16 @@ class RPSGameWidget(QWidget):
         self.exp_label.setText(f'EXP : {self.game_state.experience % self.game_state.xp_per_level}')
         self.level_label.setText(f'Level: {int(self.game_state.experience / self.game_state.xp_per_level)}')
 
+
+    def disable_button(self):  # 얘는 어디에 연결해야 될까요
+        try:
+            if self.game_state.gameOver():
+                self.rock_btn.setDisabled(True)
+                self.scissor_btn.setDisabled(True)
+                self.paper_btn.setDisabled(True)
+                print('Game button Disabled')
+        except Exception as e:
+            print(e)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
