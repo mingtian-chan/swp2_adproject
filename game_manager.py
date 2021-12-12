@@ -17,6 +17,9 @@ class GameState:
         self.max_difficulty_factor = 0.0358
         self.difficulty_factor = self.base_difficulty_factor
 
+        self.start_interval = 1000
+        self.end_interval = 100
+
         self.name = name
 
         # start hyperparameters
@@ -32,6 +35,10 @@ class GameState:
 
         self.eat_integral = []
         self.current_tick = 0
+
+    def get_tick(self):
+        level = math.floor(self.experience / self.xp_per_level)
+        return int((self.start_interval - self.end_interval)/(-self.expected_levels) * level + self.start_interval)
 
     def increment_xp(self, amount):
         start_level = math.floor(self.experience / self.xp_per_level)
