@@ -288,8 +288,11 @@ class MainWidget(QWidget):
         try:
             with open(self.savefilename, "rb") as f:
                 tamagodat = pickle.load(f)
+                if tamagodat["hp"] <= 0:
+                    raise Exception
                 self.game_state = GameState(name=tamagodat["name"], experience=tamagodat["experience"], satiety=tamagodat["satiety"],
                                             hygiene=tamagodat["hygiene"], drowsiness=tamagodat["drowsiness"], hp=tamagodat["hp"])
+
         except:
             text, ok = QInputDialog.getText(self, "Tamago", "타마고치의 이름을 입력해주세요")
             if ok:
