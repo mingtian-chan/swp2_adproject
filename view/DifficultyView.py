@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
+import pickle
 #from scipy
 
 class DifficultyView(QWidget):
@@ -11,6 +11,7 @@ class DifficultyView(QWidget):
         super(DifficultyView, self).__init__(None)
         self.game_state = game_state
         self.running = True
+        self.scoreboard_info = self.get_scoreboard()
         self.create_widgets()
 
     def create_widgets(self):
@@ -48,8 +49,21 @@ class DifficultyView(QWidget):
         ax.legend()
         self.canvas.draw()
 
-        information = f""" 현재 그린 난이도 계수는 {difficulty:.4f}이며, 0을 가장 쉬운 난이도, 1을 설계상 가장 어려운 난이도로 볼 경우 {((self.game_state.base_difficulty_factor - difficulty)/(self.game_state.base_difficulty_factor - self.game_state.max_difficulty_factor)):.2f}에 해당하는 난이도입니다."""
+        information = f""" 최종 난이도 계수는 {difficulty:.4f}이며, 0을 가장 쉬운 난이도, 1을 설계상 가장 어려운 난이도로 볼 경우 {((self.game_state.base_difficulty_factor - difficulty)/(self.game_state.base_difficulty_factor - self.game_state.max_difficulty_factor)):.2f}에 해당하는 난이도입니다."""
+        information += self.scoreboard_info
         self.text_box.setText(information)
+
+    def get_scoreboard(self):
+        scoreboard_info = "\n-----순위표-----"
+        scoreboard_info += f"\n{'이름'.ljust(20)} - 레벨\n"
+        try:
+            with open("scores.dat", "rb") as f:
+                tamagodat = pickle.load(f)
+
+            scoreboard_info += "\n".join(f"{tg['name'].ljust(20)} - {tg['level']}" for tg in sorted(tamagodat, key= lambda x: x["level"], reverse=True))
+        except:
+            return ""
+        return scoreboard_info
 
     def changeValue(self):
         level = self.level_slider.value()

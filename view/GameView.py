@@ -185,11 +185,10 @@ class RPSGameWidget(QWidget):
         if cpu == player_choice:
             self.speak_label.setText("     비겼다!!")
         elif (cpu == "hand" and player_choice == "scissor") or (cpu == "rock" and player_choice == "hand") or (cpu == "scissor" and player_choice == "rock"):
-            self.game_state.experience += 10
+            self.game_state.increment_xp(10)
             self.speak_label.setText("     이겼다!!")
         elif (player_choice == "hand" and cpu == "scissor") or (player_choice == "rock" and cpu == "hand") or (player_choice == "scissor" and cpu == "rock"):
-            self.game_state.experience -= 10
-            self.game_state.experience = max(0, self.game_state.experience)
+            self.game_state.increment_xp(-10)
             self.speak_label.setText("     졌다!!")
 
         self.exp_label.setText(f'EXP : {self.game_state.experience % self.game_state.xp_per_level}')
