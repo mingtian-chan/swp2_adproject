@@ -6,7 +6,7 @@ import numpy as np
 
 
 class GameState:
-    def __init__(self, experience=0, satiety=100, hygiene=100, drowsiness=100, hp=100):
+    def __init__(self, name=None, experience=0, satiety=100, hygiene=100, drowsiness=100, hp=100):
         self.experience = experience
         self.xp_per_level = 100
         self.satiety = satiety
@@ -16,6 +16,8 @@ class GameState:
         self.base_difficulty_factor = 0.055
         self.max_difficulty_factor = 0.0358
         self.difficulty_factor = self.base_difficulty_factor
+
+        self.name = name
 
         # start hyperparameters
 

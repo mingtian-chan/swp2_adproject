@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import *
 import PyQt5.QtGui as QtGui
 from PyQt5.QtCore import *
 import view.GameView as GameView
+import view.DifficultyView as DifficultyView
 from game_manager import GameState
 import pathlib
 import math
@@ -250,12 +251,16 @@ class MainWidget(QWidget):
             else:
                 self.game_state = self.active_window.game_state
                 self.active_window = self
+                print("return active to self")
         self.game_state.tick()
         self.update_labels_and_bars()
         if self.game_state.hp == 0:
             QMessageBox.warning(self, "Tamago", f"당신의 타마고치가 죽었습니다.\n레벨: {math.floor(self.game_state.experience / self.game_state.xp_per_level)} 경험치: {self.game_state.experience % self.game_state.xp_per_level}")
-
             self.tick_timer.stop()
+            self.write_highscore()
+            dv = DifficultyView.DifficultyView(self.game_state)
+            self.active_window = dv
+            dv.show()
 
     def update_labels_and_bars(self):
         self.level_label.setText(f'Level: {math.floor(self.game_state.experience / self.game_state.xp_per_level)}')
@@ -281,18 +286,39 @@ class MainWidget(QWidget):
         try:
             with open(self.savefilename, "rb") as f:
                 tamagodat = pickle.load(f)
-                self.game_state = GameState(experience=tamagodat["experience"], satiety=tamagodat["satiety"],
+                self.game_state = GameState(name=tamagodat["name"], experience=tamagodat["experience"], satiety=tamagodat["satiety"],
                                             hygiene=tamagodat["hygiene"], drowsiness=tamagodat["drowsiness"], hp=tamagodat["hp"])
         except:
-            self.game_state = GameState()
+            text, ok = QInputDialog.getText(self, "Tamago", "타마고치의 이름을 입력해주세요")
+            if ok:
+                self.game_state = GameState(name=text)
+            else:
+                self.close()
 
-        print(self.game_state.hp)
 
     def writeSaveFile(self):
         with open(self.savefilename, 'wb') as f:
-            pickle.dump({"experience": self.game_state.experience, "satiety": self.game_state.satiety,
+            pickle.dump({"name": self.game_state.name, "experience": self.game_state.experience, "satiety": self.game_state.satiety,
                          "hygiene": self.game_state.hygiene, "drowsiness": self.game_state.drowsiness,
                          "hp": self.game_state.hp}, f)
+
+    def write_highscore(self):
+        try:
+            with open("scores.dat", "rb") as f:
+                tamagodat = pickle.load(f)
+                found = False
+                for t in tamagodat:
+                    if t["name"] == self.game_state.name:
+                        t["score"] = math.floor(self.game_state.experience / self.game_state.xp_per_level)
+                        found = True
+                        break
+                if not found:
+                    tamagodat.append({"name": self.game_state.name, "level": math.floor(self.game_state.experience / self.game_state.xp_per_level)})
+        except:
+            tamagodat = [{"name": self.game_state.name, "level": math.floor(self.game_state.experience / self.game_state.xp_per_level)}]
+
+        with open("scores.dat", "wb") as f:
+            pickle.dump(tamagodat, f)
 
 
 
