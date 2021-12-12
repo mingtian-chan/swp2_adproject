@@ -11,6 +11,7 @@ import view.DifficultyView as DifficultyView
 from game_manager import GameState
 import pathlib
 import math
+import time
 icon_basepath = pathlib.Path(__file__).parents[1].absolute()
 icon_basepath = icon_basepath.joinpath("resource/icon")
 class MainWidget(QWidget):
@@ -23,9 +24,11 @@ class MainWidget(QWidget):
         self.init_ui()
 
         self.tick_timer = QTimer(self)
-        self.tick_timer.setInterval(1000)
+        self.tick_timer.setInterval(10)
         self.tick_timer.timeout.connect(self.ui_tick)
-        self.tick_timer.start(100)
+        self.tick_timer.start(10)
+        self.tick_invertal = self.game_state.get_tick()
+        self.last_tick_time = time.time()
 
         self.rotate_timer = QTimer(self)
         self.rotate_timer.setInterval(750)
@@ -246,6 +249,9 @@ class MainWidget(QWidget):
         self.character_btn.setIcon(QtGui.QIcon(str(icon_basepath.joinpath(random.choice(char_icons)))))
 
     def ui_tick(self):
+        if time.time() * 1000 - self.last_tick_time < self.game_state.get_tick():
+            return
+        self.last_tick_time = time.time() * 1000
         if self.active_window != self:
             if self.active_window.running:
                 return
@@ -288,8 +294,11 @@ class MainWidget(QWidget):
         try:
             with open(self.savefilename, "rb") as f:
                 tamagodat = pickle.load(f)
+                if tamagodat["hp"] <= 0:
+                    raise Exception
                 self.game_state = GameState(name=tamagodat["name"], experience=tamagodat["experience"], satiety=tamagodat["satiety"],
                                             hygiene=tamagodat["hygiene"], drowsiness=tamagodat["drowsiness"], hp=tamagodat["hp"])
+
         except:
             text, ok = QInputDialog.getText(self, "Tamago", "타마고치의 이름을 입력해주세요")
             if ok:
