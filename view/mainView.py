@@ -247,9 +247,10 @@ class MainWidget(QWidget):
         self.setLayout(mainLayout)
 
     def rotate_character(self):
+        # print('rotate_timer 가 작동했습니다.') # test_rot_timer 관련
         char_icons = ["character.png", "character_rot_negative.png", "character_rot_positive.png"]
 
-        self.character_btn.setIcon(QtGui.QIcon(str(icon_basepath.joinpath(random.choice(char_icons)))))
+        self.character_btn.setIcon(QtGui.QIcon(str(icon_basepath.joinpath(random.choice(char_icons)))))  # test_rot_char 관련
 
     def disable_button(self):
         self.food_btn.setDisabled(True)
@@ -278,14 +279,14 @@ class MainWidget(QWidget):
         if self.game_state.gameOver():  # 수정사항(12/13 : game_state의 hp = 0 대신 gameOver() 함수를 사용해서 캡슐화 진행했습니다.
             QMessageBox.warning(self, "Tamago", f"당신의 타마고치가 죽었습니다.\n레벨: {math.floor(self.game_state.experience / self.game_state.xp_per_level)} 경험치: {self.game_state.experience % self.game_state.xp_per_level}")
             self.tick_timer.stop()
-            print('틱 타이머가 멈췄습니다.')  # test_tick_1 관련
+            # print('틱 타이머가 멈췄습니다.')  # test_tick_1 관련
             self.write_highscore()
             dv = DifficultyView.DifficultyView(self.game_state)
             self.active_window = dv
             dv.show()
             self.disable_button()
 
-    def update_labels_and_bars(self):
+    def update_labels_and_bars(self):  # test_labels_bars, test_bar_change
         self.level_label.setText(f'Level: {math.floor(self.game_state.experience / self.game_state.xp_per_level)}')
         self.exp_label.setText(f'EXP : {self.game_state.experience % self.game_state.xp_per_level}')
         self.experience_bar.setText("|" * int(self.game_state.experience % self.game_state.xp_per_level / 4))
