@@ -197,7 +197,6 @@ class RPSGameWidget(QWidget):
         if cpu == player_choice:
             self.speak_label.setText("     비겼다!!")
         elif (cpu == "paper" and player_choice == "scissor") or (cpu == "rock" and player_choice == "paper") or (cpu == "scissor" and player_choice == "rock"):
-            self.game_state.increment_xp(10)
             self.speak_label.setText("     이겼다!!")
             self.wins += 1
         elif (player_choice == "paper" and cpu == "scissor") or (player_choice == "rock" and cpu == "paper") or (player_choice == "scissor" and cpu == "rock"):
