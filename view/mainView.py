@@ -262,6 +262,7 @@ class MainWidget(QWidget):
     def ui_tick(self):
         # print('틱이 발동했다 1')  # tick-1 unittest 관련
         if time.time() * 1000 - self.last_tick_time < self.game_state.get_tick():
+            self.update_labels_and_bars()
             # print('틱이 발동했다 2')  # tick-1 unittest 관련
             return
         self.last_tick_time = time.time() * 1000
