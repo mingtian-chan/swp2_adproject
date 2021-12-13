@@ -35,7 +35,6 @@ class MainWidget(QWidget):
         self.rotate_timer.setInterval(750)
         self.rotate_timer.timeout.connect(self.rotate_character)
         self.rotate_timer.start(750)
-        print("done")
 
 
     def init_ui(self):
@@ -252,7 +251,7 @@ class MainWidget(QWidget):
 
         self.character_btn.setIcon(QtGui.QIcon(str(icon_basepath.joinpath(random.choice(char_icons)))))
 
-    def disable_button(self):  # 얘는 어디에 연결해야 될까요
+    def disable_button(self):
         self.food_btn.setDisabled(True)
         self.sleep_btn.setDisabled(True)
         self.wash_btn.setDisabled(True)
@@ -275,15 +274,17 @@ class MainWidget(QWidget):
                 print("return active to self")
         self.game_state.tick()
         self.update_labels_and_bars()
-        if self.game_state.hp == 0:
+        # print('lables_and_bars()가 작동했음') # test_tick_2 관련
+        if self.game_state.gameOver():  # 수정사항(12/13 : game_state의 hp = 0 대신 gameOver() 함수를 사용해서 캡슐화 진행했습니다.
             QMessageBox.warning(self, "Tamago", f"당신의 타마고치가 죽었습니다.\n레벨: {math.floor(self.game_state.experience / self.game_state.xp_per_level)} 경험치: {self.game_state.experience % self.game_state.xp_per_level}")
             self.tick_timer.stop()
-            # print('틱 타이머가 멈췄습니다.')  # tick -1 unittest 관련
+            print('틱 타이머가 멈췄습니다.')  # test_tick_1 관련
             self.write_highscore()
             dv = DifficultyView.DifficultyView(self.game_state)
             self.active_window = dv
             dv.show()
             self.disable_button()
+
     def update_labels_and_bars(self):
         self.level_label.setText(f'Level: {math.floor(self.game_state.experience / self.game_state.xp_per_level)}')
         self.exp_label.setText(f'EXP : {self.game_state.experience % self.game_state.xp_per_level}')
@@ -313,12 +314,12 @@ class MainWidget(QWidget):
                     raise Exception
                 self.game_state = GameState(name=tamagodat["name"], experience=tamagodat["experience"], satiety=tamagodat["satiety"],
                                             hygiene=tamagodat["hygiene"], drowsiness=tamagodat["drowsiness"], hp=tamagodat["hp"])
-                # print('저장된 파일이 있습니다. 불러오기를 진행합니다.') unittest start-2에서 사용함
+                # print('저장된 파일이 있습니다. 불러오기를 진행합니다.') test_start_2에서 사용함
         except:
-            text, ok = QInputDialog.getText(self, "Tamago", "타마고치의 이름을 입력해주세요")
+            text, ok = QInputDialog.getText(self, "Tamago", "타마고치의 이름을 입력해주세요")  # error 너무 긴 글자를 넣을 시 나중 결과창이 깨짐
             if ok:
                 self.game_state = GameState(name=text)
-                # print('저장된 파일이 없습니다. 입력된 이름으로 새로운 개체를 만듭니다. ') unittest start-1,start-3 에서 사용
+                # print('저장된 파일이 없습니다. 입력된 이름으로 새로운 개체를 만듭니다. ') test_start_1, 3 에서 사용
             else:
 
                 print('취소버튼을 눌렀습니다. 게잉을 종료합니다.')  # error 현재 에러사항으로 종료되지않음
