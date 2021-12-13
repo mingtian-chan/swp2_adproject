@@ -322,8 +322,6 @@ class MainWidget(QWidget):
                 self.game_state = GameState(name=text)
                 # print('저장된 파일이 없습니다. 입력된 이름으로 새로운 개체를 만듭니다. ') #test_start_1, 3 에서 사용
             else:
-
-                print('취소버튼을 눌렀습니다. 게잉을 종료합니다.')
                 sys.exit()
 
 
