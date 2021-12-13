@@ -260,11 +260,14 @@ class MainWidget(QWidget):
 
 
     def ui_tick(self):
+        # print('틱이 발동했다 1')  # tick-1 unittest 관련
         if time.time() * 1000 - self.last_tick_time < self.game_state.get_tick():
+            # print('틱이 발동했다 2')  # tick-1 unittest 관련
             return
         self.last_tick_time = time.time() * 1000
         if self.active_window != self:
             if self.active_window.running:
+                # print('틱이 다른 화면에서 작동했다.')  # tick-1 unittest 관련
                 return
             else:
                 self.game_state = self.active_window.game_state
@@ -275,6 +278,7 @@ class MainWidget(QWidget):
         if self.game_state.hp == 0:
             QMessageBox.warning(self, "Tamago", f"당신의 타마고치가 죽었습니다.\n레벨: {math.floor(self.game_state.experience / self.game_state.xp_per_level)} 경험치: {self.game_state.experience % self.game_state.xp_per_level}")
             self.tick_timer.stop()
+            # print('틱 타이머가 멈췄습니다.')  # tick -1 unittest 관련
             self.write_highscore()
             dv = DifficultyView.DifficultyView(self.game_state)
             self.active_window = dv
@@ -309,14 +313,18 @@ class MainWidget(QWidget):
                     raise Exception
                 self.game_state = GameState(name=tamagodat["name"], experience=tamagodat["experience"], satiety=tamagodat["satiety"],
                                             hygiene=tamagodat["hygiene"], drowsiness=tamagodat["drowsiness"], hp=tamagodat["hp"])
-
+                # print('저장된 파일이 있습니다. 불러오기를 진행합니다.') unittest start-2에서 사용함
         except:
             text, ok = QInputDialog.getText(self, "Tamago", "타마고치의 이름을 입력해주세요")
             if ok:
                 self.game_state = GameState(name=text)
+                # print('저장된 파일이 없습니다. 입력된 이름으로 새로운 개체를 만듭니다. ') unittest start-1,start-3 에서 사용
             else:
-                print('cancel pressed')
+
+                print('취소버튼을 눌렀습니다. 게잉을 종료합니다.')  # error 현재 에러사항으로 종료되지않음
                 self.close()
+
+
 
 
     def writeSaveFile(self):
