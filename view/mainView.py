@@ -321,8 +321,10 @@ class MainWidget(QWidget):
                                             hygiene=tamagodat["hygiene"], drowsiness=tamagodat["drowsiness"], hp=tamagodat["hp"])
                 # print('저장된 파일이 있습니다. 불러오기를 진행합니다.') test_start_2에서 사용함
         except:
-            text, ok = QInputDialog.getText(self, "Tamago", "타마고치의 이름을 입력해주세요")  # error 너무 긴 글자를 넣을 시 나중 결과창이 깨짐
+            text, ok = QInputDialog.getText(self, "Tamago", "타마고치의 이름을 입력해주세요. 이름은 최대 20글자까지만 허용됩니다.")  # error 너무 긴 글자를 넣을 시 나중 결과창이 깨짐
             if ok:
+                if len(text) > 20:
+                    return self.readTamago()
                 self.game_state = GameState(name=text)
                 # print('저장된 파일이 없습니다. 입력된 이름으로 새로운 개체를 만듭니다. ') #test_start_1, 3 에서 사용
             else:
