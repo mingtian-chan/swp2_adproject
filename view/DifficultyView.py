@@ -56,12 +56,12 @@ class DifficultyView(QWidget):
 
     def get_scoreboard(self):
         scoreboard_info = "\n-----순위표-----"
-        scoreboard_info += f"\n이름- 레벨\n"
+        scoreboard_info += f"\n{'이름'.ljust(20)} - 레벨\n"
         try:
             with open("scores.dat", "rb") as f:
                 tamagodat = pickle.load(f)
 
-            scoreboard_info += "\n".join(f"{tg['name']} - {tg['level']}" for tg in sorted(tamagodat, key= lambda x: x["level"], reverse=True))
+            scoreboard_info += "\n".join(f"{tg['name'].ljust(20)} - {tg['level']}" for tg in sorted(tamagodat, key= lambda x: x["level"], reverse=True))
         except:
             return ""
         return scoreboard_info
