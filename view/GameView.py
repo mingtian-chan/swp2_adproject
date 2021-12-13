@@ -192,7 +192,7 @@ class RPSGameWidget(QWidget):
         cpu = random.choice(choices)
         computer_icon = QtGui.QIcon(str(icon_basepath.joinpath(f'{cpu}.png')))
         self.computer_btn.setIcon(computer_icon)
-        print(player_choice, cpu)  # test_play6 관련
+        # print(player_choice, cpu)  # test_play6 관련
         self.tries += 1
         if cpu == player_choice:
             self.speak_label.setText("     비겼다!!")
