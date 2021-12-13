@@ -39,7 +39,7 @@ class GameState:
         self.current_tick = 0
 
         self.gameOver()
-        print(self.gameover)
+
 
     def get_tick(self):
         level = math.floor(self.experience / self.xp_per_level)
@@ -59,10 +59,9 @@ class GameState:
         satiety_vals = np.array(self.eat_integral)
         self.satiety += np.sum(self.eat_gain_func(satiety_vals, self.difficulty_factor))
         self.satiety = min(100, max(0, self.satiety))
-        #self.experience += self.base_eat_xp + random.randrange(-self.base_eat_xp, self.base_eat_xp) + len(self.eat_integral)
+        self.experience += self.base_eat_xp + random.randrange(-self.base_eat_xp, self.base_eat_xp) + len(self.eat_integral)
         experience_bonus = 0 if len(self.eat_integral) >= 10 else self.base_eat_xp + random.randrange(-self.base_eat_xp, self.base_eat_xp)
         self.increment_xp(int(len(self.eat_integral)/3) + experience_bonus)
-
         self.eat_integral = []
 
     def satiety_loss_func(self, x):

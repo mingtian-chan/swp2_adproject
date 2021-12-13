@@ -1,5 +1,6 @@
 import random
 import sys
+import math
 
 from PyQt5 import Qt
 from PyQt5.QtWidgets import *
@@ -7,6 +8,7 @@ import PyQt5.QtGui as QtGui
 from PyQt5.QtCore import *
 import pathlib
 from game_manager import GameState
+from scipy.stats import binom
 icon_basepath = pathlib.Path(__file__).parents[1].absolute()
 icon_basepath = icon_basepath.joinpath("resource/icon")
 
@@ -19,6 +21,8 @@ class RPSGameWidget(QWidget):
         self.running = True
         self.init_ui()
         self.disable_button()
+        self.tries = 0
+        self.wins = 0
 
     def init_ui(self):
         self.resize(550, 650)
@@ -93,7 +97,7 @@ class RPSGameWidget(QWidget):
         scissor_btn.clicked.connect(lambda x: self.play_rps("scissor"))
         self.scissor_btn = scissor_btn
 
-        paper_icon = QtGui.QIcon(str(icon_basepath.joinpath('hand.png')))
+        paper_icon = QtGui.QIcon(str(icon_basepath.joinpath('paper.png')))
         paper_btn = QPushButton()
         paper_btn.setMaximumWidth(90)
         paper_btn.setMaximumHeight(80)
@@ -101,7 +105,7 @@ class RPSGameWidget(QWidget):
         paper_btn.setStyleSheet(BTN_STYLE_SHEET)
         paper_btn.setIconSize(QSize(70, 70))
         paper_btn.setIcon(paper_icon)
-        paper_btn.clicked.connect(lambda event: self.play_rps("hand"))
+        paper_btn.clicked.connect(lambda event: self.play_rps("paper"))
         self.paper_btn = paper_btn
 
         scissor_label = QLabel('가위')
@@ -184,33 +188,39 @@ class RPSGameWidget(QWidget):
             self.close()
 
     def play_rps(self, player_choice):
-        choices = ["rock", "hand", "scissor"]
+        choices = ["rock", "paper", "scissor"]
         cpu = random.choice(choices)
         computer_icon = QtGui.QIcon(str(icon_basepath.joinpath(f'{cpu}.png')))
         self.computer_btn.setIcon(computer_icon)
-        print(player_choice, cpu)
+        print(player_choice, cpu)  # test_play6 관련
+        self.tries += 1
         if cpu == player_choice:
             self.speak_label.setText("     비겼다!!")
-        elif (cpu == "hand" and player_choice == "scissor") or (cpu == "rock" and player_choice == "hand") or (cpu == "scissor" and player_choice == "rock"):
+        elif (cpu == "paper" and player_choice == "scissor") or (cpu == "rock" and player_choice == "paper") or (cpu == "scissor" and player_choice == "rock"):
             self.game_state.increment_xp(10)
             self.speak_label.setText("     이겼다!!")
-        elif (player_choice == "hand" and cpu == "scissor") or (player_choice == "rock" and cpu == "hand") or (player_choice == "scissor" and cpu == "rock"):
+            self.wins += 1
+        elif (player_choice == "paper" and cpu == "scissor") or (player_choice == "rock" and cpu == "paper") or (player_choice == "scissor" and cpu == "rock"):
             self.game_state.increment_xp(-10)
             self.speak_label.setText("     졌다!!")
+
+
+        if self.tries >= max(5, int(math.floor(self.game_state.experience / self.game_state.xp_per_level) / 2) + 1):
+            prob = binom.sf(self.wins, self.tries, 1 / 3)
+            QMessageBox.information(self, "RPS", f"{self.tries} 번의 시도 중 {self.wins} 만큼 이겼으며, 적어도 해당 횟수만큼 이길 확률은 {prob:.4f}입니다. 보상으로 경험치 {int(100 * (1 - prob)**2)}를 드립니다.")
+            self.game_state.increment_xp(int(100 * (1 - prob)**2))
+            self.tries = 0
+            self.wins = 0
 
         self.exp_label.setText(f'EXP : {self.game_state.experience % self.game_state.xp_per_level}')
         self.level_label.setText(f'Level: {int(self.game_state.experience / self.game_state.xp_per_level)}')
 
+    def disable_button(self):
+        if self.game_state.gameOver():
+            self.rock_btn.setDisabled(True)
+            self.scissor_btn.setDisabled(True)
+            self.paper_btn.setDisabled(True)
 
-    def disable_button(self):  # 얘는 어디에 연결해야 될까요
-        try:
-            if self.game_state.gameOver():
-                self.rock_btn.setDisabled(True)
-                self.scissor_btn.setDisabled(True)
-                self.paper_btn.setDisabled(True)
-                print('Game button Disabled')
-        except Exception as e:
-            print(e)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
