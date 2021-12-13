@@ -320,11 +320,9 @@ class MainWidget(QWidget):
             text, ok = QInputDialog.getText(self, "Tamago", "타마고치의 이름을 입력해주세요")  # error 너무 긴 글자를 넣을 시 나중 결과창이 깨짐
             if ok:
                 self.game_state = GameState(name=text)
-                # print('저장된 파일이 없습니다. 입력된 이름으로 새로운 개체를 만듭니다. ') test_start_1, 3 에서 사용
+                # print('저장된 파일이 없습니다. 입력된 이름으로 새로운 개체를 만듭니다. ') #test_start_1, 3 에서 사용
             else:
-
-                print('취소버튼을 눌렀습니다. 게잉을 종료합니다.')  # error 현재 에러사항으로 종료되지않음
-                self.close()
+                sys.exit()
 
 
 
