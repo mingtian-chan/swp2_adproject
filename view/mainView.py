@@ -249,7 +249,7 @@ class MainWidget(QWidget):
     def rotate_character(self):
         if self.game_state.gameOver():
             return
-        print('rotate_timer 가 작동했습니다.') # test_rot_timer 관련
+        # print('rotate_timer 가 작동했습니다.') # test_rot_timer 관련
         char_icons = ["character.png", "character_rot_negative.png", "character_rot_positive.png"]
 
         self.character_btn.setIcon(QtGui.QIcon(str(icon_basepath.joinpath(random.choice(char_icons)))))  # test_rot_char 관련
