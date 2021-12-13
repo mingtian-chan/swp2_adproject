@@ -93,7 +93,7 @@ class RPSGameWidget(QWidget):
         scissor_btn.clicked.connect(lambda x: self.play_rps("scissor"))
         self.scissor_btn = scissor_btn
 
-        paper_icon = QtGui.QIcon(str(icon_basepath.joinpath('hand.png')))
+        paper_icon = QtGui.QIcon(str(icon_basepath.joinpath('paper.png')))
         paper_btn = QPushButton()
         paper_btn.setMaximumWidth(90)
         paper_btn.setMaximumHeight(80)
@@ -101,7 +101,7 @@ class RPSGameWidget(QWidget):
         paper_btn.setStyleSheet(BTN_STYLE_SHEET)
         paper_btn.setIconSize(QSize(70, 70))
         paper_btn.setIcon(paper_icon)
-        paper_btn.clicked.connect(lambda event: self.play_rps("hand"))
+        paper_btn.clicked.connect(lambda event: self.play_rps("paper"))
         self.paper_btn = paper_btn
 
         scissor_label = QLabel('가위')
@@ -184,33 +184,29 @@ class RPSGameWidget(QWidget):
             self.close()
 
     def play_rps(self, player_choice):
-        choices = ["rock", "hand", "scissor"]
+        choices = ["rock", "paper", "scissor"]
         cpu = random.choice(choices)
         computer_icon = QtGui.QIcon(str(icon_basepath.joinpath(f'{cpu}.png')))
         self.computer_btn.setIcon(computer_icon)
         print(player_choice, cpu)
         if cpu == player_choice:
             self.speak_label.setText("     비겼다!!")
-        elif (cpu == "hand" and player_choice == "scissor") or (cpu == "rock" and player_choice == "hand") or (cpu == "scissor" and player_choice == "rock"):
+        elif (cpu == "paper" and player_choice == "scissor") or (cpu == "rock" and player_choice == "paper") or (cpu == "scissor" and player_choice == "rock"):
             self.game_state.increment_xp(10)
             self.speak_label.setText("     이겼다!!")
-        elif (player_choice == "hand" and cpu == "scissor") or (player_choice == "rock" and cpu == "hand") or (player_choice == "scissor" and cpu == "rock"):
+        elif (player_choice == "paper" and cpu == "scissor") or (player_choice == "rock" and cpu == "paper") or (player_choice == "scissor" and cpu == "rock"):
             self.game_state.increment_xp(-10)
             self.speak_label.setText("     졌다!!")
 
         self.exp_label.setText(f'EXP : {self.game_state.experience % self.game_state.xp_per_level}')
         self.level_label.setText(f'Level: {int(self.game_state.experience / self.game_state.xp_per_level)}')
 
+    def disable_button(self):
+        if self.game_state.gameOver():
+            self.rock_btn.setDisabled(True)
+            self.scissor_btn.setDisabled(True)
+            self.paper_btn.setDisabled(True)
 
-    def disable_button(self):  # 얘는 어디에 연결해야 될까요
-        try:
-            if self.game_state.gameOver():
-                self.rock_btn.setDisabled(True)
-                self.scissor_btn.setDisabled(True)
-                self.paper_btn.setDisabled(True)
-                print('Game button Disabled')
-        except Exception as e:
-            print(e)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
