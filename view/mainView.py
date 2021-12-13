@@ -247,10 +247,13 @@ class MainWidget(QWidget):
         self.setLayout(mainLayout)
 
     def rotate_character(self):
-        # print('rotate_timer 가 작동했습니다.') # test_rot_timer 관련
+        if self.game_state.gameOver():
+            return
+        print('rotate_timer 가 작동했습니다.') # test_rot_timer 관련
         char_icons = ["character.png", "character_rot_negative.png", "character_rot_positive.png"]
 
         self.character_btn.setIcon(QtGui.QIcon(str(icon_basepath.joinpath(random.choice(char_icons)))))  # test_rot_char 관련
+
 
     def disable_button(self):
         self.food_btn.setDisabled(True)
@@ -272,7 +275,7 @@ class MainWidget(QWidget):
             else:
                 self.game_state = self.active_window.game_state
                 self.active_window = self
-                print("return active to self")
+                # print("return active to self")
         self.game_state.tick()
         self.update_labels_and_bars()
         # print('lables_and_bars()가 작동했음') # test_tick_2 관련
