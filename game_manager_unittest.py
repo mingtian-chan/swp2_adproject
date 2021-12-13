@@ -70,7 +70,7 @@ class TestGameManager(unittest.TestCase):
         self.assertEqual(self.val20.hygiene, 20)
         self.assertEqual(self.val20.experience, 0)
         self.val20.wash()
-        self.assertEqual(self.val20.hygiene, 100)  # 청결은 1000이 되며
+        self.assertEqual(self.val20.hygiene, 100)  # 청결은 100이 되며
         self.assertEqual(self.val20.drowsiness, 200)  # 졸림은 20으로 변하지 않고
         self.assertEqual(self.val20.experience, 20)  # 경험치는 20이 오릅니다.
 
