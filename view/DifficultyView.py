@@ -4,7 +4,7 @@ from PyQt5.QtCore import *
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 import pickle
-#from scipy
+import math
 
 class DifficultyView(QWidget):
     def __init__(self, game_state):
@@ -21,6 +21,7 @@ class DifficultyView(QWidget):
         self.level_slider = QSlider(Qt.Horizontal)
         self.level_slider.setMinimum(0)
         self.level_slider.setMaximum(self.game_state.expected_levels)
+        self.level_slider.setValue(math.floor(self.game_state.expected_levels / self.game_state.xp_per_level))
         self.level_slider.valueChanged.connect(self.changeValue)
 
         self.text_box = QTextEdit()

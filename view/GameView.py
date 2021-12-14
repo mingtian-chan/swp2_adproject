@@ -192,12 +192,11 @@ class RPSGameWidget(QWidget):
         cpu = random.choice(choices)
         computer_icon = QtGui.QIcon(str(icon_basepath.joinpath(f'{cpu}.png')))
         self.computer_btn.setIcon(computer_icon)
-        print(player_choice, cpu)  # test_play6 관련
+        # print(player_choice, cpu)  # test_play6 관련
         self.tries += 1
         if cpu == player_choice:
             self.speak_label.setText("     비겼다!!")
         elif (cpu == "paper" and player_choice == "scissor") or (cpu == "rock" and player_choice == "paper") or (cpu == "scissor" and player_choice == "rock"):
-            self.game_state.increment_xp(10)
             self.speak_label.setText("     이겼다!!")
             self.wins += 1
         elif (player_choice == "paper" and cpu == "scissor") or (player_choice == "rock" and cpu == "paper") or (player_choice == "scissor" and cpu == "rock"):

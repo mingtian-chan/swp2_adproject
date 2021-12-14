@@ -1,0 +1,233 @@
+<style type="text/css">
+  .tg  {border-collapse:collapse;border-color:#93a1a1;border-spacing:0;}
+  .tg td{background-color:#fdf6e3;border-color:#93a1a1;border-style:solid;border-width:1px;color:#002b36;
+    font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}
+  .tg th{background-color:#657b83;border-color:#93a1a1;border-style:solid;border-width:1px;color:#fdf6e3;
+    font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+  .tg .tg-9wq8{border-color:inherit;text-align:center;vertical-align:middle}
+  .tg .tg-baqh{text-align:center;vertical-align:top}
+  .tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
+  .tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
+  .tg .tg-0lax{text-align:left;vertical-align:top}
+  </style>
+  <table class="tg">
+  <thead>
+    <tr>
+      <th class="tg-c3ow">클래스</th>
+      <th class="tg-c3ow">메서드</th>
+      <th class="tg-c3ow">입력인자</th>
+      <th class="tg-c3ow">출력인자</th>
+      <th class="tg-c3ow">기능</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tg-9wq8" rowspan="10">MainWidget</td>
+      <td class="tg-c3ow">init_ui</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">메인화면</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">rotate_character</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">1초마다 캐릭터 움직임</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">ui_tick</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">gamestate의 tick 함수가 주기적으로 호출될수 있게끔 ui에서 연결</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">update_labels_and_bars</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">사용자의 현재 레벨, 경험치, 체력, 포만감, 청결, 졸림 수치등을 업데이트</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">game_clicked</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">미니게임 화면으로 전환</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">keyPressEvent</td>
+      <td class="tg-c3ow">event</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">esc가 눌렸을 때 꺼짐</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">closeEvent</td>
+      <td class="tg-c3ow">event</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">writeSaveFile()호출</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">readTamago</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">파일에 저장된 GameState를 읽어 GameState를 생성함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">writeSaveFile</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">GameState관련 수치를 파일로 저장함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">write_highscore</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">게임 종료시 이름과 레벨을 저장 </td>
+    </tr>
+    <tr>
+      <td class="tg-9wq8" rowspan="5">RPSGameWidget</td>
+      <td class="tg-c3ow">init_ui</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">미니게임 화면</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">closeEvent</td>
+      <td class="tg-c3ow">a0</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">exit_clicked() 호출</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">exit_clicked</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">게임종료 버튼 누르면 미니게임 종료되고 미니게임 창 닫힘</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">keyPressEvent</td>
+      <td class="tg-c3ow">event</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">esc가 눌렸을 때 꺼짐</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">play_rps</td>
+      <td class="tg-c3ow">player_choice</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">사용자의 가위바위보 선택을 받아 승자를 판정하여 적절한 경험치를 수여함</td>
+    </tr>
+    <tr>
+      <td class="tg-9wq8" rowspan="5">DifficultyView</td>
+      <td class="tg-c3ow">create_widgets</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">난이도 창의 기본 위젯을 초기화하고 화면에 표시함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">plot</td>
+      <td class="tg-c3ow">difficulty</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">난이도 계수를 받아 plot위젯을 업데이트함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">get_scoreboard</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">파일에 저장된 순위 정보를 읽어와 리스트를 반환</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">changeValue</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">난이도 계수를 받아와 난이도 모형을 수정후, plot()를 호출함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">closeEvent</td>
+      <td class="tg-c3ow">a0</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">창 종료 요청시 종료 및 MainView로 focus 이양</td>
+    </tr>
+    <tr>
+      <td class="tg-9wq8" rowspan="14">GameState</td>
+      <td class="tg-c3ow">__init__</td>
+      <td class="tg-0pky">name, experience, satiety, hygiene, drowsiness, hp</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">GameState 게임 난이도 조절 관리자를 주어진 게임 상태값으로 생성함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">get_tick</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">동적 난이도를 위해 레벨에 비례하여 게임의 목표 진행속도를 계산하요 반환함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">increment_xp</td>
+      <td class="tg-c3ow">amount</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">amount만큼 사용자의 경험치를 증가함.</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">eat</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">포만감을 난이도 모형에 따라 증가시키고, 적분모형에 따라 적잘한 양의 경험치를 지급함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">satiety_loss_func</td>
+      <td class="tg-c3ow">x</td>
+      <td class="tg-c3ow">y</td>
+      <td class="tg-0pky">포만감 수치 x에서의 단위 시간당 포만감 감소 수치 y를 반환함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">drowsiness_loss_func</td>
+      <td class="tg-c3ow">x</td>
+      <td class="tg-c3ow">y</td>
+      <td class="tg-0pky">졸림 수치 x에서의 단위 시간당 졸림 감소 수치 y를 반환함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">eat_gain_func</td>
+      <td class="tg-c3ow">x, difficulty</td>
+      <td class="tg-c3ow">y</td>
+      <td class="tg-0pky">난이도 계수 difficulty, 포만감 수치 x에서 먹이를 줬을 경우 포만감 증가량 y를 반황함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">satiety_loss</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">현재 포만감에 대해 satiety_loss_func()를 호출하여 포만감을 차감시키고, min(0, max(100, satiety))수행함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">sleep</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow"></td>
+      <td class="tg-0pky">졸림 수치를 100으로 설정함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">wash</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-c3ow">-</td>
+      <td class="tg-0pky">청결 수치를 100으로 설정함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">drowsiness_loss</td>
+      <td class="tg-c3ow">x</td>
+      <td class="tg-c3ow">y</td>
+      <td class="tg-0pky">졸림 수치 x에서의 단위 시간당 졸림 수치 감소량 y를 계산함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">hygiene_loss</td>
+      <td class="tg-c3ow">x</td>
+      <td class="tg-c3ow">y</td>
+      <td class="tg-0pky">청결 수치 x에서의 단위 시간당 청결 수치 감소량 y를 계산함</td>
+    </tr>
+    <tr>
+      <td class="tg-c3ow">hp_loss_func</td>
+      <td class="tg-c3ow">x</td>
+      <td class="tg-c3ow">y</td>
+      <td class="tg-0pky">현재 게임 수치 array x를 받아 체력 손실함수를 계산하여, 단위 시간당 체력 감소량 y를 계산함</td>
+    </tr>
+    <tr>
+      <td class="tg-baqh">tick</td>
+      <td class="tg-baqh">-</td>
+      <td class="tg-baqh">-</td>
+      <td class="tg-0lax">단위 시간에 대해 게임 시간을 1만큼 증가시키고, 게임 루프를 1회 수행함</td>
+    </tr>
+  </tbody>
+  </table>

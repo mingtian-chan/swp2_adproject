@@ -247,10 +247,13 @@ class MainWidget(QWidget):
         self.setLayout(mainLayout)
 
     def rotate_character(self):
+        if self.game_state.gameOver():
+            return
         # print('rotate_timer 가 작동했습니다.') # test_rot_timer 관련
         char_icons = ["character.png", "character_rot_negative.png", "character_rot_positive.png"]
 
         self.character_btn.setIcon(QtGui.QIcon(str(icon_basepath.joinpath(random.choice(char_icons)))))  # test_rot_char 관련
+
 
     def disable_button(self):
         self.food_btn.setDisabled(True)
@@ -262,6 +265,7 @@ class MainWidget(QWidget):
     def ui_tick(self):
         # print('틱이 발동했다 1')  # tick-1 unittest 관련
         if time.time() * 1000 - self.last_tick_time < self.game_state.get_tick():
+            self.update_labels_and_bars()
             # print('틱이 발동했다 2')  # tick-1 unittest 관련
             return
         self.last_tick_time = time.time() * 1000
@@ -272,7 +276,7 @@ class MainWidget(QWidget):
             else:
                 self.game_state = self.active_window.game_state
                 self.active_window = self
-                print("return active to self")
+                # print("return active to self")
         self.game_state.tick()
         self.update_labels_and_bars()
         # print('lables_and_bars()가 작동했음') # test_tick_2 관련
@@ -317,8 +321,10 @@ class MainWidget(QWidget):
                                             hygiene=tamagodat["hygiene"], drowsiness=tamagodat["drowsiness"], hp=tamagodat["hp"])
                 # print('저장된 파일이 있습니다. 불러오기를 진행합니다.') test_start_2에서 사용함
         except:
-            text, ok = QInputDialog.getText(self, "Tamago", "타마고치의 이름을 입력해주세요")  # error 너무 긴 글자를 넣을 시 나중 결과창이 깨짐
+            text, ok = QInputDialog.getText(self, "Tamago", "타마고치의 이름을 입력해주세요.\n이름은 최대 20글자까지만 허용됩니다.")  # error 너무 긴 글자를 넣을 시 나중 결과창이 깨짐
             if ok:
+                if len(text) > 20:
+                    return self.readTamago()
                 self.game_state = GameState(name=text)
                 # print('저장된 파일이 없습니다. 입력된 이름으로 새로운 개체를 만듭니다. ') #test_start_1, 3 에서 사용
             else:
